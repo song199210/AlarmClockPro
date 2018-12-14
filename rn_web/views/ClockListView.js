@@ -18,7 +18,6 @@ import {
 import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view';
 
 class ClockListView extends Component {
-
 	constructor(props) {
 		super(props);
 		this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
@@ -34,7 +33,6 @@ class ClockListView extends Component {
 			this.rowSwipeAnimatedValues[`${i}`] = new Animated.Value(0);
 		});
 	}
-
 	closeRow(rowMap, rowKey) {
 		if (rowMap[rowKey]) {
 			rowMap[rowKey].closeRow();
@@ -155,7 +153,6 @@ const styles = StyleSheet.create({
 	container: {
         backgroundColor: '#171717',
         width:Dimensions.get('window').width,
-        borderWidth:1,
 		flex: 1
 	},
 	standalone: {
@@ -166,10 +163,10 @@ const styles = StyleSheet.create({
 		color: '#FFF'
 	},
 	rowFront: {
+        borderBottomWidth: 1,
         backgroundColor: '#171717',
         borderBottomColor: '#8e8e93',
         color:"#8e8e93",
-        borderBottomWidth: 0.5,
         padding:10
     },
     listBox:{

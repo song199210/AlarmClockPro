@@ -8,8 +8,8 @@
 
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View,Dimensions} from 'react-native';
-import AddClockView from "./rn_web/views/AddClockView";
-
+import RingListView from "./rn_web/views/RingListView";
+import MyNavigation from "./rn_web/route";
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
   android:
@@ -21,9 +21,7 @@ type Props = {};
 export default class App extends Component<Props> {
   render() {
     return (
-      <View style={styles.container}>
-        <AddClockView/>
-      </View>
+        <MyNavigation/>
     );
   }
 }
