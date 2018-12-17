@@ -1,5 +1,5 @@
 import React from "react";
-import {View,StyleSheet,FlatList,Text,Dimensions,TouchableOpacity,Image,Button,Switch} from "react-native";
+import {View,StyleSheet,FlatList,Text,Dimensions,TouchableOpacity,Image,Button,Switch,NativeModules} from "react-native";
 import Picker from "react-native-picker";
 import CommonListCom from "../components/CommonListCom";
 
@@ -48,9 +48,6 @@ export default class AddClockView extends React.Component {
             },
             onPickerCancel: data => {
                 console.log(data);
-            },
-            onPickerSelect: data => {
-                console.log(data);
             }
         });
         Picker.show();
@@ -72,7 +69,7 @@ export default class AddClockView extends React.Component {
                 console.log(data);
             },
             onPickerSelect: data => {
-                console.log(data);
+                console.log(data.toString());
             }
         });
         Picker.show();
@@ -113,8 +110,26 @@ export default class AddClockView extends React.Component {
             </View>
         );
     }
+    getTime=()=>{
+        const timeData=this.state.timeData;
+        var hours="",min="";
+        if(timeData[0] == "上午"){
+            if(timeData[1].length == 1){
+                hours="0"+timeData[1];
+            }else{
+                hours=timeData[1];
+            }
+        }else{
+            if(parseInt(timeData[1])<12){
+                hours=(parseInt(timeData[1])+12).toString();
+            }
+        }
+        min=timeData[2];
+        return `${hours}:${min}`;
+    }
     saveClockData=()=>{//保存闹钟数据
-
+        const timeStr=this.getTime();
+        NativeModules.RNUtilModules.setRNClock(timeStr,0,0);
     }
     render(){
         let time0=this.state.timeData[0];
