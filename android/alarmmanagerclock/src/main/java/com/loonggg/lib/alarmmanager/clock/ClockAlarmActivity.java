@@ -21,11 +21,12 @@ public class ClockAlarmActivity extends Activity {
         setContentView(R.layout.activity_clock_alarm);
         String message = this.getIntent().getStringExtra("msg");
         int flag = this.getIntent().getIntExtra("flag", 0);
-        int type = this.getIntent().getIntExtra("type",0);
-        showDialogInBroadcastReceiver(message, flag,type);
+        int type = this.getIntent().getIntExtra("vibratorType",0); //震动模式
+        int ringType=this.getIntent().getIntExtra("ringType",0); //铃声模式
+        showDialogInBroadcastReceiver(message, flag,type,ringType);
     }
 
-    private void showDialogInBroadcastReceiver(String message, final int flag,final int type) {
+    private void showDialogInBroadcastReceiver(String message, final int flag,final int type,int ring_type) {
         long[] long_type=null; //默认模式
         switch (type){//判断震动模式
             case 0: //断奏
@@ -51,7 +52,28 @@ public class ClockAlarmActivity extends Activity {
                 break;
         }
         if (flag == 1 || flag == 2) {//创建铃声
-            mediaPlayer = MediaPlayer.create(this, R.raw.in_call_alarm);
+            switch (ring_type){
+                case 0:
+                    mediaPlayer = MediaPlayer.create(this, R.raw.in_call_alarm);
+                    break;
+                case 1:
+                    mediaPlayer = MediaPlayer.create(this, R.raw.in_call_alarm);
+                    break;
+                case 2:
+                    mediaPlayer = MediaPlayer.create(this, R.raw.in_call_alarm);
+                    break;
+                case 3:
+                    mediaPlayer = MediaPlayer.create(this, R.raw.in_call_alarm);
+                    break;
+                case 4:
+                    mediaPlayer = MediaPlayer.create(this, R.raw.in_call_alarm);
+                    break;
+                case 5:
+                    mediaPlayer = MediaPlayer.create(this, R.raw.in_call_alarm);
+                    break;
+                default:
+                    break;
+            }
             mediaPlayer.setLooping(true);
             mediaPlayer.start();
         }

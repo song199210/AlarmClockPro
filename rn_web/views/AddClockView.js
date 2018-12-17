@@ -6,6 +6,7 @@ import CommonListCom from "../components/CommonListCom";
 export default class AddClockView extends React.Component {
     constructor(props){
         super(props);
+        const date=new Date();
         this.state={
             setlist:[
                 {title: "重复",value:""},
@@ -13,25 +14,29 @@ export default class AddClockView extends React.Component {
                 {title: "震动",value:""},
                 {title: "天气预报",value:""},
             ],
-            timeData:['上午','1','01']
+            timeData:[date.getHours().toString(),date.getMinutes().toString()]
         }
     }
     setTimeData=()=>{
         let time_data1 = ["上午","下午"];
         let time_data2 = [];
         let time_data3 = [];
-        for(var i=1;i<=12;i++){
-            var str=i.toString();
+        for(var i=0;i<=23;i++){
+            let str="";
+            str=i.toString();
+            if(i<10){
+                str="0"+str;
+            }
             time_data2.push(str);
         }
         for(var i=1;i<=60;i++){
-            var str=i.toString();
+            let str=i.toString();
             if(i<10){
                 str="0"+str;
             }
             time_data3.push(str);
         }
-        return [time_data1,time_data2,time_data3];
+        return [time_data2,time_data3];
     }
     showPickerTime=()=>{
         const data=this.setTimeData();
@@ -40,6 +45,7 @@ export default class AddClockView extends React.Component {
             pickerConfirmBtnText:"确认",
             pickerCancelBtnText:"取消",
             pickerData: data,
+            isLoop:true,
             selectedValue:this.state.timeData,
             onPickerConfirm: data => {
                 this.setState({
@@ -52,31 +58,9 @@ export default class AddClockView extends React.Component {
         });
         Picker.show();
     }
-    showPickerFrequency=()=>{//设置重复频率
-        const data=['重复','周一','周二','周三','周四','周五','周六','周日'];
-        Picker.init({
-            pickerTitleText:"重复",
-            pickerConfirmBtnText:"确认",
-            pickerCancelBtnText:"取消",
-            pickerData: data,
-            selectedValue:this.state.timeData,
-            onPickerConfirm: data => {
-                // this.setState({
-                //     timeData:data
-                // });
-            },
-            onPickerCancel: data => {
-                console.log(data);
-            },
-            onPickerSelect: data => {
-                console.log(data.toString());
-            }
-        });
-        Picker.show();
-    }
     _renderItem1=()=>{
         return (
-            <TouchableOpacity style={styles.set_list_right} onPress={ _ => this.showPickerFrequency() }>
+            <TouchableOpacity style={styles.set_list_right} onPress={ _ => this.props.navigation.navigate("SelectRepeat") }>
                 <Text style={styles.basicFont}>重复</Text>
                 <Image style={styles.right_icon} source={require("../assets/images/right_icon.png")}/>
             </TouchableOpacity>
@@ -84,7 +68,7 @@ export default class AddClockView extends React.Component {
     }
     _renderItem2=()=>{
         return (
-            <TouchableOpacity style={styles.set_list_right} onPress={ _ => this.closeRow(rowMap, data.item.key) }>
+            <TouchableOpacity style={styles.set_list_right} onPress={ _ => this.props.navigation.navigate("SelectRing") }>
                 <Text style={styles.basicFont}>雷达</Text>
                 <Image style={styles.right_icon} source={require("../assets/images/right_icon.png")}/>
             </TouchableOpacity>
@@ -92,7 +76,7 @@ export default class AddClockView extends React.Component {
     }
     _renderItem3=()=>{
         return (
-            <TouchableOpacity style={styles.set_list_right} onPress={ _ => this.closeRow(rowMap, data.item.key) }>
+            <TouchableOpacity style={styles.set_list_right} onPress={ _ => this.props.navigation.navigate("SelectShock") }>
                 <Text style={styles.basicFont}>心跳</Text>
                 <Image style={styles.right_icon} source={require("../assets/images/right_icon.png")}/>
             </TouchableOpacity>
@@ -112,34 +96,24 @@ export default class AddClockView extends React.Component {
     }
     getTime=()=>{
         const timeData=this.state.timeData;
-        var hours="",min="";
-        if(timeData[0] == "上午"){
-            if(timeData[1].length == 1){
-                hours="0"+timeData[1];
-            }else{
-                hours=timeData[1];
-            }
-        }else{
-            if(parseInt(timeData[1])<12){
-                hours=(parseInt(timeData[1])+12).toString();
-            }
-        }
-        min=timeData[2];
-        return `${hours}:${min}`;
+        return `${timeData[0]}:${timeData[1]}`;
     }
     saveClockData=()=>{//保存闹钟数据
+        var clockObj={
+            cycle:0, //闹钟频率
+            vibratorTyppe:0, //震动模式
+            ringType:0 //铃声模式
+        };
         const timeStr=this.getTime();
-        NativeModules.RNUtilModules.setRNClock(timeStr,0,0);
+        NativeModules.RNUtilModules.setRNClock(timeStr,[0,1,2,3],2,1,2);
     }
     render(){
-        let time0=this.state.timeData[0];
-        let time1=this.state.timeData[1];
-        let time2=this.state.timeData[2];
+        let time1=this.state.timeData[0];
+        let time2=this.state.timeData[1];
         return (
             <View style={styles.addClockBox}>
                 <View style={styles.selectTime}>
                     <TouchableOpacity style={[styles.set_list_right,{justifyContent:"center",height:100}]} onPress={ () => this.showPickerTime() }>
-                        <Text style={styles.basicFont1}>{time0}</Text>
                         <Text style={[styles.basicFont1,{fontSize:48}]}>{time1}:{time2}</Text>
                     </TouchableOpacity>
                 </View>

@@ -3,6 +3,9 @@ import {Image,Text,TouchableOpacity,StyleSheet} from "react-native";
 import {createBottomTabNavigator,createStackNavigator, createAppContainer} from "react-navigation";
 import ClockListView from "./views/ClockListView";
 import AddClockView from "./views/AddClockView";
+import RepeatListView from "./views/RepeatListView";
+import RingListView from "./views/RingListView";
+import ShockListView from "./views/ShockListView";
 
 const styles = StyleSheet.create({
     img_icon_xxs:{
@@ -127,7 +130,70 @@ const Stacks = createStackNavigator({
                   }
               }
           }
-      }
+    },
+    SelectRing: { //选择铃声模式
+        screen: RingListView,
+        navigationOptions:(props)=>{
+            return {
+                headerTitle:(<Text style={{ flex: 1,color:"#ff8500",marginRight:45,fontSize:18,textAlign: 'center' }}>铃声选择</Text>),
+                headerStyle:{
+                    backgroundColor:"#111"
+                    // borderBottomWidth:1,
+                    // borderBottomColor:"#666"
+                },
+                headerTintColor:"#ff8500",
+                headerTitleStyle:{
+                    color:"#ff8500",
+                    textAlign:"center",
+                    justifyContent: 'center',
+                    textAlignVertical:"center",
+                    alignItems: 'center'
+                }
+            }
+        }
+    },
+    SelectShock: { //选择铃声模式
+        screen: ShockListView,
+        navigationOptions:(props)=>{
+            return {
+                headerTitle:(<Text style={{ flex: 1,color:"#ff8500",marginRight:45,fontSize:18,textAlign: 'center' }}>震动选择</Text>),
+                headerStyle:{
+                    backgroundColor:"#111"
+                    // borderBottomWidth:1,
+                    // borderBottomColor:"#666"
+                },
+                headerTintColor:"#ff8500",
+                headerTitleStyle:{
+                    color:"#ff8500",
+                    textAlign:"center",
+                    justifyContent: 'center',
+                    textAlignVertical:"center",
+                    alignItems: 'center'
+                }
+            }
+        }
+    },
+    SelectRepeat: { //选择铃声模式
+        screen: RepeatListView,
+        navigationOptions:(props)=>{
+            return {
+                headerTitle:(<Text style={{ flex: 1,color:"#ff8500",marginRight:45,fontSize:18,textAlign: 'center' }}>震动选择</Text>),
+                headerStyle:{
+                    backgroundColor:"#111"
+                    // borderBottomWidth:1,
+                    // borderBottomColor:"#666"
+                },
+                headerTintColor:"#ff8500",
+                headerTitleStyle:{
+                    color:"#ff8500",
+                    textAlign:"center",
+                    justifyContent: 'center',
+                    textAlignVertical:"center",
+                    alignItems: 'center'
+                }
+            }
+        }
+    }
   }, {
     initialRouteName: 'ClockList',
     mode: 'modal'

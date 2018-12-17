@@ -1,34 +1,49 @@
 import React from "react";
-import {View,Text,FlatList,Image,StyleSheet,Dimensions,TouchableOpacity} from "react-native";
+import {View,Text,FlatList,Image,StyleSheet,Dimensions,TouchableOpacity,NativeModules} from "react-native";
 
-export default class ShockListView extends React.PureComponent {
+export default class RingListView extends React.PureComponent {
     constructor(props){
         super(props);
+        this.state={
+            dataList:[
+                {key:"7",text: '无',selected:true},
+                {key:"1",text: '断奏',selected:false},
+                {key:"2",text: '急促',selected:false},
+                {key:"3",text: '交响乐',selected:false},
+                {key:"4",text: '轻重音',selected:false},
+                {key:"5",text: '提醒',selected:false},
+                {key:"6",text: '心跳',selected:false}
+            ]
+        }
+    }
+    setShockType=(key)=>{ //保存震动模式
+        let arr=[].concat(this.state.dataList);
+        arr.forEach((i)=>{
+            i['selected']=false;
+            if(i['key']==key){
+                i['selected']=true;
+            }
+        });
+        NativeModules.RNUtilModules.setShockType(key);
+        this.setState({
+            dataList:arr
+        });
     }
     _renderItem=({item})=>{
-    return (
-            <TouchableOpacity style={styles.list_item}>
-                <Text style={[styles.basicFont,{flex:1}]}>{item.key}</Text>
-                <Image style={styles.img_icon} source={require("../assets/images/yes_icon.png")}/>
-            </TouchableOpacity>
-        );
+        return (
+                <TouchableOpacity style={styles.list_item} onPress={()=>this.setShockType(item['key'])}>
+                    <Text style={[styles.basicFont,{flex:1}]}>{item.text}</Text>
+                    {item['selected'] && (<Image style={styles.img_icon} source={require("../assets/images/yes_icon.png")}/>)}
+                </TouchableOpacity>
+            );
     }
     render(){
         return (
             <View style={styles.ringBox}>
-                <View style={styles.title}><Text style={[styles.basicFont,{color:"#888"}]}>铃声选择</Text></View>
+                <View style={styles.title}><Text style={[styles.basicFont,{color:"#888"}]}>震动选择</Text></View>
                 <View style={styles.container}>
                     <FlatList
-                    data={[
-                        {key: 'Devin'},
-                        {key: 'Jackson'},
-                        {key: 'James'},
-                        {key: 'Joel'},
-                        {key: 'John'},
-                        {key: 'Jillian'},
-                        {key: 'Jimmy'},
-                        {key: 'Julie'},
-                    ]}
+                    data={this.state.dataList}
                     renderItem={this._renderItem}
                     />
                 </View>
@@ -58,14 +73,14 @@ const styles=StyleSheet.create({
     },
     list_item:{
         borderBottomWidth:1,
-        padding:8,
+        padding:10,
         marginLeft:8,
         marginRight:8,
         borderBottomColor: '#555',
         flexDirection:"row"
     },
     img_icon:{
-        width:25,
-        height:25
+        width:22,
+        height:22
     }
 });
