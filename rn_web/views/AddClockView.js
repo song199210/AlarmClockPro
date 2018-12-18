@@ -1,9 +1,10 @@
 import React from "react";
+import {connect} from "react-redux";
 import {View,StyleSheet,FlatList,Text,Dimensions,TouchableOpacity,Image,Button,Switch,NativeModules} from "react-native";
 import Picker from "react-native-picker";
 import CommonListCom from "../components/CommonListCom";
 
-export default class AddClockView extends React.Component {
+class AddClockView extends React.Component {
     constructor(props){
         super(props);
         const date=new Date();
@@ -61,7 +62,7 @@ export default class AddClockView extends React.Component {
     _renderItem1=()=>{
         return (
             <TouchableOpacity style={styles.set_list_right} onPress={ _ => this.props.navigation.navigate("SelectRepeat") }>
-                <Text style={styles.basicFont}>重复</Text>
+                <Text style={styles.basicFont}>{this.props.RepeatType['name']}</Text>
                 <Image style={styles.right_icon} source={require("../assets/images/right_icon.png")}/>
             </TouchableOpacity>
         );
@@ -69,7 +70,7 @@ export default class AddClockView extends React.Component {
     _renderItem2=()=>{
         return (
             <TouchableOpacity style={styles.set_list_right} onPress={ _ => this.props.navigation.navigate("SelectRing") }>
-                <Text style={styles.basicFont}>雷达</Text>
+                <Text style={styles.basicFont}>{this.props.RingType['name']}</Text>
                 <Image style={styles.right_icon} source={require("../assets/images/right_icon.png")}/>
             </TouchableOpacity>
         );
@@ -77,7 +78,7 @@ export default class AddClockView extends React.Component {
     _renderItem3=()=>{
         return (
             <TouchableOpacity style={styles.set_list_right} onPress={ _ => this.props.navigation.navigate("SelectShock") }>
-                <Text style={styles.basicFont}>心跳</Text>
+                <Text style={styles.basicFont}>{this.props.ShockType['name']}</Text>
                 <Image style={styles.right_icon} source={require("../assets/images/right_icon.png")}/>
             </TouchableOpacity>
         );
@@ -143,7 +144,14 @@ export default class AddClockView extends React.Component {
         )
     }
 }
-
+export default connect((state)=>{
+    console.log(state)
+    return {
+        RepeatType:state['cRepeatReducer'],
+        ShockType:state['cShockReducer'],
+        RingType:state['cRingReducer']
+    }
+})(AddClockView);
 const styles=StyleSheet.create({
     basicFont:{
         color:"#fff"

@@ -1,7 +1,10 @@
 import React from "react";
+import {bindActionCreators} from "redux";
+import {connect} from "react-redux";
+import {shock_action} from "../redux/action/index";
 import {View,Text,FlatList,Image,StyleSheet,Dimensions,TouchableOpacity,NativeModules} from "react-native";
 
-export default class RingListView extends React.PureComponent {
+class ShockListView extends React.PureComponent {
     constructor(props){
         super(props);
         this.state={
@@ -16,7 +19,11 @@ export default class RingListView extends React.PureComponent {
             ]
         }
     }
-    setShockType=(key)=>{ //保存震动模式
+    componentDidMount() {
+        
+    }
+    setShockType=(item)=>{ //保存震动模式
+        const key=item['key'];
         let arr=[].concat(this.state.dataList);
         arr.forEach((i)=>{
             i['selected']=false;
@@ -28,10 +35,11 @@ export default class RingListView extends React.PureComponent {
         this.setState({
             dataList:arr
         });
+        this.props.ShockAction({text:item['text'],key:item['key']});
     }
     _renderItem=({item})=>{
         return (
-                <TouchableOpacity style={styles.list_item} onPress={()=>this.setShockType(item['key'])}>
+                <TouchableOpacity style={styles.list_item} onPress={()=>this.setShockType(item)}>
                     <Text style={[styles.basicFont,{flex:1}]}>{item.text}</Text>
                     {item['selected'] && (<Image style={styles.img_icon} source={require("../assets/images/yes_icon.png")}/>)}
                 </TouchableOpacity>
@@ -51,7 +59,18 @@ export default class RingListView extends React.PureComponent {
         )
     }
 }
-
+export default connect((state)=>{
+	return {
+        ShockType:state['cShockReducer']
+    }
+},(dispatch)=>{
+    // return bindActionCreators({
+    //     ShockAction:shock_action
+    // });
+    return {
+        ShockAction:(args)=>dispatch(shock_action(args))
+    }
+})(ShockListView);
 const styles=StyleSheet.create({
     basicFont:{
         color:"#ccc"

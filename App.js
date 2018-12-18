@@ -7,6 +7,9 @@
  */
 
 import React, {Component} from 'react';
+import {Provider} from "react-redux";
+import configureStore from "./rn_web/redux/store";
+
 import {Platform, StyleSheet, Text, View,Dimensions} from 'react-native';
 import RingListView from "./rn_web/views/RingListView";
 import MyNavigation from "./rn_web/route";
@@ -18,10 +21,14 @@ const instructions = Platform.select({
 });
 
 type Props = {};
+
+const store=configureStore();
 export default class App extends Component<Props> {
   render() {
     return (
-        <MyNavigation/>
+        <Provider store={store}>
+          <MyNavigation/>
+        </Provider>
     );
   }
 }
