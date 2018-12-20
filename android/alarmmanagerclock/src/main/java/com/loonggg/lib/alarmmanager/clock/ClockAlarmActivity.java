@@ -28,6 +28,9 @@ public class ClockAlarmActivity extends Activity {
     }
 
     private void showDialogInBroadcastReceiver(String message, final int flag,final int type,int ring_type) {
+        Log.v("flag的值", String.valueOf(flag));
+        Log.v("ring_type的值",String.valueOf(ring_type));
+        Log.v("vibratorType的值",String.valueOf(type));
         long[] long_type=null; //默认模式
         switch (type){//判断震动模式
             case 0: //断奏
@@ -52,8 +55,6 @@ public class ClockAlarmActivity extends Activity {
                 long_type=new long[]{100, 60, 100, 600};
                 break;
         }
-        Log.v("flag的值", String.valueOf(flag));
-        Log.v("ring_type的值",String.valueOf(ring_type));
         if (flag == 1 || flag == 2) {//创建铃声
             switch (ring_type){
                 case 0:

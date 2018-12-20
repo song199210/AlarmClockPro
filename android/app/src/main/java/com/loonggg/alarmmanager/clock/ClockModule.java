@@ -128,6 +128,7 @@ public class ClockModule {
                 } else {//多选，周几的闹钟
                     String weeksStr = parseRepeat(cycle, 1);
                     String[] weeks = weeksStr.split(",");
+                    Log.v("weeks的值", String.valueOf(weeks));
                     for (int i = 0; i < weeks.length; i++) {
                         AlarmManagerUtil.setAlarm(_that, 2, Integer.parseInt(times[0]), Integer
                                 .parseInt(times[1]), i, Integer.parseInt(weeks[i]), "闹钟响了", clockMode, vibratorTyppe,ringType);
