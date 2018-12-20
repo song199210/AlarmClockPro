@@ -23,9 +23,15 @@ public class RNUtilModule extends ReactContextBaseJavaModule {
         UtilClass.SetLocationPermission(reactContext);
         UtilClass.getLocation();
     }
+    /**
+     * @param flaglist 重复方式
+     * @param clockMode 闹钟模式：1铃声;0震动;2铃声和震动
+     * @param vibratorType 震动模式
+     * @param ring 响铃方式
+    */
     @ReactMethod
-    public void setRNClock(String time, ReadableArray flaglist, int ring, int vibratorTyppe, int ringType){//设置闹钟时间,ring选择方式:1表示只有铃声提醒，0表示只有震动提醒
-        ClockModule.setClock(reactContext.getCurrentActivity(),time,flaglist,ring,vibratorTyppe,ringType);
+    public void setRNClock(String time, ReadableArray flaglist, int clockMode, int vibratorTyppe, int ringType){
+        ClockModule.setClock(reactContext.getCurrentActivity(),time,flaglist,clockMode,vibratorTyppe,ringType);
     }
     @ReactMethod
     public void setShockType(String typeStr){//设置震动模式

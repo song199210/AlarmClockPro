@@ -5,6 +5,7 @@ import android.app.Service;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class ClockAlarmActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clock_alarm);
         String message = this.getIntent().getStringExtra("msg");
-        int flag = this.getIntent().getIntExtra("flag", 0);
+        int flag = this.getIntent().getIntExtra("soundOrVibrator", 0);
         int type = this.getIntent().getIntExtra("vibratorType",0); //震动模式
         int ringType=this.getIntent().getIntExtra("ringType",0); //铃声模式
         showDialogInBroadcastReceiver(message, flag,type,ringType);
@@ -51,27 +52,21 @@ public class ClockAlarmActivity extends Activity {
                 long_type=new long[]{100, 60, 100, 600};
                 break;
         }
+        Log.v("flag的值", String.valueOf(flag));
+        Log.v("ring_type的值",String.valueOf(ring_type));
         if (flag == 1 || flag == 2) {//创建铃声
             switch (ring_type){
                 case 0:
                     mediaPlayer = MediaPlayer.create(this, R.raw.in_call_alarm);
                     break;
                 case 1:
-                    mediaPlayer = MediaPlayer.create(this, R.raw.in_call_alarm);
+                    mediaPlayer = MediaPlayer.create(this, R.raw.lingsheng2);
                     break;
                 case 2:
-                    mediaPlayer = MediaPlayer.create(this, R.raw.in_call_alarm);
-                    break;
-                case 3:
-                    mediaPlayer = MediaPlayer.create(this, R.raw.in_call_alarm);
-                    break;
-                case 4:
-                    mediaPlayer = MediaPlayer.create(this, R.raw.in_call_alarm);
-                    break;
-                case 5:
-                    mediaPlayer = MediaPlayer.create(this, R.raw.in_call_alarm);
+                    mediaPlayer = MediaPlayer.create(this, R.raw.lingsheng3);
                     break;
                 default:
+                    mediaPlayer = MediaPlayer.create(this, R.raw.in_call_alarm);
                     break;
             }
             mediaPlayer.setLooping(true);

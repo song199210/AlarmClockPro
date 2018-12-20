@@ -20,10 +20,10 @@ class ShockListView extends React.PureComponent {
         }
     }
     componentDidMount() {
-        
+        const key=this.props.ShockType['key'];
+        this.cShockState(key);
     }
-    setShockType=(item)=>{ //保存震动模式
-        const key=item['key'];
+    cShockState=(key)=>{
         let arr=[].concat(this.state.dataList);
         arr.forEach((i)=>{
             i['selected']=false;
@@ -31,10 +31,15 @@ class ShockListView extends React.PureComponent {
                 i['selected']=true;
             }
         });
-        NativeModules.RNUtilModules.setShockType(key);
         this.setState({
             dataList:arr
         });
+    }
+    setShockType=(item)=>{ //保存震动模式
+        const key=item['key'];
+        let arr=[].concat(this.state.dataList);
+        this.cShockState(key);
+        NativeModules.RNUtilModules.setShockType(key);
         this.props.ShockAction({text:item['text'],key:item['key']});
     }
     _renderItem=({item})=>{

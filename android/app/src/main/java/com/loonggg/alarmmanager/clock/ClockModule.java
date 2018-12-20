@@ -106,6 +106,7 @@ public class ClockModule {
                 }
             }
             cycle = ret;
+            Log.v("cycle的值123", String.valueOf(cycle));
         }
         /**
          * @param flaglist 闹钟频率模式

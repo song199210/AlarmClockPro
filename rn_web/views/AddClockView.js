@@ -9,12 +9,6 @@ class AddClockView extends React.Component {
         super(props);
         const date=new Date();
         this.state={
-            setlist:[
-                {title: "重复",value:""},
-                {title: "铃声",value:""},
-                {title: "震动",value:""},
-                {title: "天气预报",value:""},
-            ],
             timeData:[date.getHours().toString(),date.getMinutes().toString()]
         }
     }
@@ -62,7 +56,7 @@ class AddClockView extends React.Component {
     _renderItem1=()=>{
         return (
             <TouchableOpacity style={styles.set_list_right} onPress={ _ => this.props.navigation.navigate("SelectRepeat") }>
-                <Text style={styles.basicFont}>{this.props.RepeatType['name']}</Text>
+                <Text style={styles.basicFont}>{this.props.RepeatType['text']}</Text>
                 <Image style={styles.right_icon} source={require("../assets/images/right_icon.png")}/>
             </TouchableOpacity>
         );
@@ -70,7 +64,7 @@ class AddClockView extends React.Component {
     _renderItem2=()=>{
         return (
             <TouchableOpacity style={styles.set_list_right} onPress={ _ => this.props.navigation.navigate("SelectRing") }>
-                <Text style={styles.basicFont}>{this.props.RingType['name']}</Text>
+                <Text style={styles.basicFont}>{this.props.RingType['text']}</Text>
                 <Image style={styles.right_icon} source={require("../assets/images/right_icon.png")}/>
             </TouchableOpacity>
         );
@@ -78,7 +72,7 @@ class AddClockView extends React.Component {
     _renderItem3=()=>{
         return (
             <TouchableOpacity style={styles.set_list_right} onPress={ _ => this.props.navigation.navigate("SelectShock") }>
-                <Text style={styles.basicFont}>{this.props.ShockType['name']}</Text>
+                <Text style={styles.basicFont}>{this.props.ShockType['text']}</Text>
                 <Image style={styles.right_icon} source={require("../assets/images/right_icon.png")}/>
             </TouchableOpacity>
         );
@@ -106,7 +100,21 @@ class AddClockView extends React.Component {
             ringType:0 //铃声模式
         };
         const timeStr=this.getTime();
-        NativeModules.RNUtilModules.setRNClock(timeStr,[0,1,2,3],2,1,2);
+        console.log(this.props.RepeatType['key'])
+        const repeat_arr=this.props.RepeatType['key'].split(",");
+        const shockType=this.props.ShockType['key'];
+        const ringType=this.props.RingType['key'];
+        let clockMode=1;
+        if(shockType == "7"){
+            clockMode=0;
+        }else{
+            clockMode=2;
+        }
+        var repeatList=repeat_arr.map((item)=>{
+            return parseInt(item);
+        });
+        console.log(shockType+":::"+ringType);
+        NativeModules.RNUtilModules.setRNClock(timeStr,repeatList,clockMode,parseInt(shockType),parseInt(ringType));
     }
     render(){
         let time1=this.state.timeData[0];
@@ -145,7 +153,6 @@ class AddClockView extends React.Component {
     }
 }
 export default connect((state)=>{
-    console.log(state)
     return {
         RepeatType:state['cRepeatReducer'],
         ShockType:state['cShockReducer'],

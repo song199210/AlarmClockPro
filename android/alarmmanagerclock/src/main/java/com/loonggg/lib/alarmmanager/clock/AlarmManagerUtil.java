@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 
 
 import java.util.Calendar;
@@ -66,6 +67,8 @@ public class AlarmManagerUtil {
         intent.putExtra("soundOrVibrator", soundOrVibrator);//震动模式
         intent.putExtra("vibratorType",vibratorType); //震动模式
         intent.putExtra("ringType",ringType); //铃声模式
+        Log.v("soundOrVibrator的值", String.valueOf(soundOrVibrator));
+        Log.v("ringType的值", String.valueOf(ringType));
         //发送广播
         PendingIntent sender = PendingIntent.getBroadcast(context, id, intent, PendingIntent
                 .FLAG_CANCEL_CURRENT);
