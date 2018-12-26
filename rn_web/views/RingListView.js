@@ -16,7 +16,6 @@ class RingListView extends React.PureComponent {
     }
     componentDidMount(){
         const key=this.props.RingType['key'];
-        console.log(this.props.RingType);
         this.cRingState(key);
     }
     cRingState=(key)=>{

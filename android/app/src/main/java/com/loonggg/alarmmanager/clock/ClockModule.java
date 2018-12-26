@@ -83,8 +83,13 @@ public class ClockModule {
                     break;
                 case 1:
                     mediaPlayer = MediaPlayer.create(_that, com.loonggg.lib.alarmmanager.clock.R.raw.lingsheng2);
+                    break;
                 case 2:
                     mediaPlayer = MediaPlayer.create(_that, com.loonggg.lib.alarmmanager.clock.R.raw.lingsheng3);
+                    break;
+                    default:
+                        mediaPlayer = MediaPlayer.create(_that, com.loonggg.lib.alarmmanager.clock.R.raw.lingsheng3);
+                        break;
             }
             mediaPlayer.setLooping(false);
             mediaPlayer.start();

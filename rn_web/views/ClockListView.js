@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {connect} from "react-redux";
 import {
 	Animated,
 	AppRegistry,
@@ -21,37 +22,12 @@ class ClockListView extends Component {
 		this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 		this.state = {
             isSwitchOn:false,
-			listType: 'FlatList',
-			listViewData: Array(20).fill('').map((_,i) => ({key: `${i}`, text: `item #${i}`})),
-			sectionListData: Array(5).fill('').map((_,i) => ({title: `title${i + 1}`, data: [...Array(5).fill('').map((_, j) => ({key: `${i}.${j}`, text: `item #${j}`}))]})),
+			listType: 'FlatList'
 		};
-
 		this.rowSwipeAnimatedValues = {};
 		Array(20).fill('').forEach((_, i) => {
 			this.rowSwipeAnimatedValues[`${i}`] = new Animated.Value(0);
 		});
-	}
-	closeRow(rowMap, rowKey) {
-		if (rowMap[rowKey]) {
-			rowMap[rowKey].closeRow();
-		}
-	}
-
-	deleteRow(rowMap, rowKey) {
-		this.closeRow(rowMap, rowKey);
-		const newData = [...this.state.listViewData];
-		const prevIndex = this.state.listViewData.findIndex(item => item.key === rowKey);
-		newData.splice(prevIndex, 1);
-		this.setState({listViewData: newData});
-	}
-
-	deleteSectionRow(rowMap, rowKey) {
-		this.closeRow(rowMap, rowKey);
-		var [section, row] = rowKey.split('.');
-		const newData = [...this.state.sectionListData];
-		const prevIndex = this.state.sectionListData[section].data.findIndex(item => item.key === rowKey);
-		newData[section].data.splice(prevIndex, 1);
-		this.setState({sectionListData: newData});
 	}
 
 	onRowDidOpen = (rowKey, rowMap) => {
@@ -64,6 +40,7 @@ class ClockListView extends Component {
 	}
 
 	render() {
+		console.log(this.state.listViewData);
 		return (
 			<View style={styles.container}>
 
@@ -72,7 +49,7 @@ class ClockListView extends Component {
 
 					<SwipeListView
 						useFlatList
-						data={this.state.listViewData}
+						data={this.props.clockList}
 						renderItem={ (data, rowMap) => (
 							<TouchableHighlight
 								onPress={ _ => console.log('You touched me') }
@@ -102,29 +79,11 @@ class ClockListView extends Component {
 						)}
 						renderHiddenItem={ (data, rowMap) => (
 							<View style={styles.rowBack}>
-								<TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnLeft]} onPress={ _ => this.closeRow(rowMap, data.item.key) }>
+								<TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnLeft]} onPress={ _ => {} }>
 									<Text style={styles.backTextWhite}>编辑</Text>
 								</TouchableOpacity>
-								<TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnRight]} onPress={ _ => this.deleteRow(rowMap, data.item.key) }>
-									<Animated.View
-										style={[
-											styles.trash,
-											{
-
-												transform: [
-													{
-														scale: this.rowSwipeAnimatedValues[data.item.key].interpolate({
-															inputRange: [45, 90],
-															outputRange: [0, 1],
-															extrapolate: 'clamp',
-														}),
-													}
-												],
-											}
-										]}
-									>
-										<Text style={styles.backTextWhite}>删除</Text>
-									</Animated.View>
+								<TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnRight]} onPress={ _ => {} }>
+									<Text style={styles.backTextWhite}>删除</Text>
 								</TouchableOpacity>
 							</View>
 						)}
@@ -142,7 +101,11 @@ class ClockListView extends Component {
 		);
 	}
 }
-
+export default connect((state)=>{
+	return {
+		clockList:state['clockReducer']
+	}	
+})(ClockListView);
 const styles = StyleSheet.create({
     fontColor:{
         color:"#8e8e93",
@@ -207,5 +170,3 @@ const styles = StyleSheet.create({
 		right: 0
 	}
 });
-
-export default ClockListView;

@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.util.Log;
 
 
@@ -19,7 +20,7 @@ public class AlarmManagerUtil {
     public static void setAlarmTime(Context context, long timeInMillis, Intent intent) {
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         PendingIntent sender = PendingIntent.getBroadcast(context, intent.getIntExtra("id", 0),
-                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                intent, PendingIntent.FLAG_CANCEL_CURRENT);
         int interval = (int) intent.getLongExtra("intervalMillis", 0);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             am.setWindow(AlarmManager.RTC_WAKEUP, timeInMillis, interval, sender);
@@ -67,12 +68,8 @@ public class AlarmManagerUtil {
         intent.putExtra("soundOrVibrator", soundOrVibrator);//震动模式
         intent.putExtra("vibratorType",vibratorType); //震动模式
         intent.putExtra("ringType",ringType); //铃声模式
-        Log.v("soundOrVibrator的值", String.valueOf(soundOrVibrator));
-        Log.v("ringType的值", String.valueOf(ringType));
-        Log.v("vibratorType的值",String.valueOf(vibratorType));
-        Log.v("flag的值1",String.valueOf(flag));
         //发送广播
-        PendingIntent sender = PendingIntent.getBroadcast(context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent sender = PendingIntent.getBroadcast(context, id, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             am.setWindow(AlarmManager.RTC_WAKEUP, calMethod(week, calendar.getTimeInMillis()),
                     intervalMillis, sender);

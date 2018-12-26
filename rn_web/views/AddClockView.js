@@ -3,6 +3,7 @@ import {connect} from "react-redux";
 import {View,StyleSheet,FlatList,Text,Dimensions,TouchableOpacity,Image,Button,Switch,NativeModules} from "react-native";
 import Picker from "react-native-picker";
 import CommonListCom from "../components/CommonListCom";
+import {ADD_CLOCK} from "../redux/ActionType";
 
 class AddClockView extends React.Component {
     constructor(props){
@@ -100,7 +101,6 @@ class AddClockView extends React.Component {
             ringType:0 //铃声模式
         };
         const timeStr=this.getTime();
-        console.log(this.props.RepeatType['key'])
         const repeat_arr=this.props.RepeatType['key'].split(",");
         const shockType=this.props.ShockType['key'];
         const ringType=this.props.RingType['key'];
@@ -113,8 +113,12 @@ class AddClockView extends React.Component {
         var repeatList=repeat_arr.map((item)=>{
             return parseInt(item);
         });
-        console.log(shockType+":::"+ringType);
-        NativeModules.RNUtilModules.setRNClock(timeStr,repeatList,clockMode,parseInt(shockType),parseInt(ringType));
+        NativeModules.RNUtilModules.setRNClock(timeStr,repeatList,clockMode,parseInt(shockType),parseInt(ringType));        
+        this.props.AddClock({
+            type:ADD_CLOCK,
+            payload:clockObj
+        });
+        this.props.navigation.navigate("Home");
     }
     render(){
         let time1=this.state.timeData[0];
@@ -157,6 +161,10 @@ export default connect((state)=>{
         RepeatType:state['cRepeatReducer'],
         ShockType:state['cShockReducer'],
         RingType:state['cRingReducer']
+    }
+},(dispatch)=>{
+    return {
+        AddClock:(data)=>dispatch(data)
     }
 })(AddClockView);
 const styles=StyleSheet.create({

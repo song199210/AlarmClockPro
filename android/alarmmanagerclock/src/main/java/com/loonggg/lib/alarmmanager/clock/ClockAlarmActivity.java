@@ -20,11 +20,21 @@ public class ClockAlarmActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clock_alarm);
+        Log.v("执行了吗>","YES");
         String message = this.getIntent().getStringExtra("msg");
-        int flag = this.getIntent().getIntExtra("soundOrVibrator", 0);
-        int type = this.getIntent().getIntExtra("vibratorType",0); //震动模式
-        int ringType=this.getIntent().getIntExtra("ringType",0); //铃声模式
+        Bundle data=this.getIntent().getBundleExtra("data");
+        Log.v("bundle的值:", String.valueOf(data));
+        int flag = this.getIntent().getIntExtra("flag", 0);
+        int type = this.getIntent().getIntExtra("type",0); //震动模式
+        int ringType=this.getIntent().getIntExtra("r_type",0); //铃声模式
         showDialogInBroadcastReceiver(message, flag,type,ringType);
+//        if(data != null){
+//            int flag=data.getInt("soundOrVibrator");
+//            int type=data.getInt("vibratorType");
+//            int ringType=data.getInt("ringType");
+//        }else{
+//            Log.v("data为空","~~~~~~~~~~~~~~~~~~~~~");
+//        }
     }
 
     private void showDialogInBroadcastReceiver(String message, final int flag,final int type,int ring_type) {

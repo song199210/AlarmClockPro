@@ -10,5 +10,6 @@ export const initState={
     RepeatType:{ //重复模式
         text:"重复",
         key:"8"
-    }
+    },
+    clockList:[]
 }
