@@ -3,20 +3,12 @@ import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import {shock_action} from "../redux/action/index";
 import {View,Text,FlatList,Image,StyleSheet,Dimensions,TouchableOpacity,NativeModules} from "react-native";
-
+import {ShockListData} from "../assets/data";
 class ShockListView extends React.PureComponent {
     constructor(props){
         super(props);
         this.state={
-            dataList:[
-                {key:"7",text: '无',selected:true},
-                {key:"1",text: '断奏',selected:false},
-                {key:"2",text: '急促',selected:false},
-                {key:"3",text: '交响乐',selected:false},
-                {key:"4",text: '轻重音',selected:false},
-                {key:"5",text: '提醒',selected:false},
-                {key:"6",text: '心跳',selected:false}
-            ]
+            dataList:ShockListData
         }
     }
     componentDidMount() {
@@ -69,9 +61,6 @@ export default connect((state)=>{
         ShockType:state['cShockReducer']
     }
 },(dispatch)=>{
-    // return bindActionCreators({
-    //     ShockAction:shock_action
-    // });
     return {
         ShockAction:(args)=>dispatch(shock_action(args))
     }

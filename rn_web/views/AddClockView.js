@@ -3,15 +3,58 @@ import {connect} from "react-redux";
 import {View,StyleSheet,FlatList,Text,Dimensions,TouchableOpacity,Image,Button,Switch,NativeModules} from "react-native";
 import Picker from "react-native-picker";
 import CommonListCom from "../components/CommonListCom";
-import {ADD_CLOCK} from "../redux/ActionType";
+import {add_clock,update_clock,ring_action,shock_action,repeat_action} from "../redux/action/index";
+import {RingListData,ShockListData,RepeatListData} from "../assets/data";
 
 class AddClockView extends React.Component {
     constructor(props){
         super(props);
         const date=new Date();
         this.state={
-            timeData:[date.getHours().toString(),date.getMinutes().toString()]
+            key:"",//判断是新增还是编辑
+            timeData:[
+                date.getHours().toString(),
+                date.getMinutes()<10?("0"+date.getMinutes().toString()):(date.getMinutes().toString())
+            ]
         }
+    }
+    componentDidMount(){
+        const state=this.props.navigation.state.params;
+        if(typeof state == "undefined"){
+            this.setState({
+                key:""
+            });
+            return false;
+        }
+        this.setState({
+            key:state['key'],
+            timeData:state['timeData']
+        });
+        for(var i=0;i<RingListData.length;i++){
+            if(RingListData[i]['key'] == state['ringType']){
+                this.props.RingAction(RingListData[i]);
+                break;
+            }
+        }
+        for(var j=0;j<ShockListData.length;j++){
+            if(ShockListData[j]['key'] == state['shockType']){
+                this.props.ShockAction(ShockListData[j]);
+                break;
+            }
+        }
+        let arr_text=[];
+        let arr1=state['repeatType'].split(",");
+        var n=0,len1=arr1.length;
+        var m=0,len2=RepeatListData.length;
+        for(;n<len1;n++){
+            for(;m<len2;m++){
+                if(arr1[n] == RepeatListData[m]['key']){
+                    arr_text.push(RepeatListData[m]['text'])
+                    break;
+                }
+            }
+        }
+        this.props.RepeatAction({key:state['repeatType'],text:arr_text.join(",")});
     }
     setTimeData=()=>{
         let time_data1 = ["上午","下午"];
@@ -96,9 +139,10 @@ class AddClockView extends React.Component {
     }
     saveClockData=()=>{//保存闹钟数据
         var clockObj={
-            cycle:0, //闹钟频率
-            vibratorTyppe:0, //震动模式
-            ringType:0 //铃声模式
+            repeatType:this.props.RepeatType['key'], //闹钟重复频率
+            shockType:this.props.ShockType['key'], //震动模式
+            ringType:this.props.RingType['key'], //铃声模式
+            timeData:this.state['timeData']
         };
         const timeStr=this.getTime();
         const repeat_arr=this.props.RepeatType['key'].split(",");
@@ -114,10 +158,12 @@ class AddClockView extends React.Component {
             return parseInt(item);
         });
         NativeModules.RNUtilModules.setRNClock(timeStr,repeatList,clockMode,parseInt(shockType),parseInt(ringType));        
-        this.props.AddClock({
-            type:ADD_CLOCK,
-            payload:clockObj
-        });
+        if(this.state.key == ''){
+            this.props.AddClock(clockObj);
+        }else{
+            clockObj['key']=this.state.key;
+            this.props.UpdateClock(clockObj);
+        }
         this.props.navigation.navigate("Home");
     }
     render(){
@@ -145,11 +191,10 @@ class AddClockView extends React.Component {
                         />
                     </View>
                     <View style={styles.btn}>
-                        <Button
-                        onPress={this.saveClockData}
-                        title="设置"
-                        color="#4bd863"
-                        />
+                        <TouchableOpacity 
+                        onPress={this.saveClockData}>
+                            <Text style={{color:"#fff"}}>保存</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </View>
@@ -164,7 +209,11 @@ export default connect((state)=>{
     }
 },(dispatch)=>{
     return {
-        AddClock:(data)=>dispatch(data)
+        AddClock:(data)=>dispatch(add_clock(data)),
+        UpdateClock:(data)=>dispatch(update_clock(data)),
+        RingAction:(data)=>dispatch(ring_action(data)),
+        ShockAction:(data)=>dispatch(shock_action(data)),
+        RepeatAction:(data)=>dispatch(repeat_action(data))
     }
 })(AddClockView);
 const styles=StyleSheet.create({

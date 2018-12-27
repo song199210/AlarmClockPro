@@ -2,22 +2,13 @@ import React from "react";
 import {connect} from "react-redux";
 import {repeat_action} from "../redux/action/index";
 import {View,Text,FlatList,Image,StyleSheet,Dimensions,TouchableOpacity} from "react-native";
+import {RepeatListData} from "../assets/data";
 
 class RepeatListView extends React.PureComponent {
     constructor(props){
         super(props);
         this.state={
-            dataList:[
-                {selected:false,key:"8",text: '重复'},
-                {selected:false,key:"0",text: '周一'},
-                {selected:false,key:"1",text: '周二'},
-                {selected:false,key:"2",text: '周三'},
-                {selected:false,key:"3",text: '周四'},
-                {selected:false,key:"4",text: '周五'},
-                {selected:false,key:"5",text: '周六'},
-                {selected:false,key:"6",text: '周日'},
-                {selected:false,key:"7",text: '清除全部'}
-            ]
+            dataList:RepeatListData
         }
     }
     componentDidMount() {
@@ -81,6 +72,7 @@ class RepeatListView extends React.PureComponent {
             }
         }
         if(newArr1.length != 0 && newArr2.length != 0){
+            console.log({text:newArr1.join(","),key:newArr2.join(",")})
             this.props.RepeatAction({text:newArr1.join(","),key:newArr2.join(",")});
         }
     }

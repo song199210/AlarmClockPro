@@ -13,9 +13,8 @@ import {
 	TouchableHighlight,
 	View
 } from 'react-native';
-
 import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view';
-
+import {del_clock} from "../redux/action/index";
 class ClockListView extends Component {
 	constructor(props) {
 		super(props);
@@ -24,65 +23,58 @@ class ClockListView extends Component {
             isSwitchOn:false,
 			listType: 'FlatList'
 		};
-		this.rowSwipeAnimatedValues = {};
-		Array(20).fill('').forEach((_, i) => {
-			this.rowSwipeAnimatedValues[`${i}`] = new Animated.Value(0);
-		});
+		// this.rowSwipeAnimatedValues = {};
+		// Array(20).fill('').forEach((_, i) => {
+		// 	this.rowSwipeAnimatedValues[`${i}`] = new Animated.Value(0);
+		// });
 	}
-
+	delClockData=(data)=>{//删除闹钟
+		this.props.delClockDataProp(data);
+	}
 	onRowDidOpen = (rowKey, rowMap) => {
 		console.log('This row opened', rowKey);
 	}
 
-	onSwipeValueChange = (swipeData) => {
-		const { key, value } = swipeData;
-		this.rowSwipeAnimatedValues[key].setValue(Math.abs(value));
-	}
-
 	render() {
-		console.log(this.state.listViewData);
+		console.log(this.props.clockList);
 		return (
 			<View style={styles.container}>
-
 				{
 					this.state.listType === 'FlatList' &&
-
 					<SwipeListView
 						useFlatList
 						data={this.props.clockList}
-						renderItem={ (data, rowMap) => (
-							<TouchableHighlight
-								onPress={ _ => console.log('You touched me') }
-								style={styles.rowFront}
-								underlayColor={'#AAA'}
-							>
-								<View style={[styles.listBox,styles.listRow]}>
-                                    <View>
-                                        <View style={styles.listOne}>
-                                            <Text style={[styles.fontColor,{fontSize:23}]}>上午10:00</Text>
-                                        </View>
-                                        <View style={styles.listTwo}>
-                                            <Text style={[styles.fontColor,{fontSize:12}]}>铃声+震动</Text>
-                                        </View>
-                                    </View>
-                                    <View style={[styles.listRow,{justifyContent:"flex-end",alignItems:"center"}]}>
-                                        <Switch
-                                            onValueChange={(value) => this.setState({isSwitchOn: value})}
-                                            style={{marginBottom:10,marginTop:10}}
-                                            value={this.state.isSwitchOn}
-                                            onTintColor="#4bd863"
-                                            thumbTintColor="#FFFFFF"
-                                            tintColor="#8e8e93" />
-                                    </View>
-                                </View>
-							</TouchableHighlight>
-						)}
+						renderItem={ (data, rowMap) => {
+							const item=data.item;
+							return (
+								<View style={styles.rowFront}>
+									<View style={[styles.listBox,styles.listRow]}>
+										<View>
+											<View style={styles.listOne}>
+												<Text style={[styles.fontColor,{fontSize:23}]}>{item.timeData[0]}:{item.timeData[1]}</Text>
+											</View>
+											<View style={styles.listTwo}>
+												<Text style={[styles.fontColor,{fontSize:12}]}>{item.ringType != 0?'铃声+':''}震动</Text>
+											</View>
+										</View>
+										<View style={[styles.listRow,{justifyContent:"flex-end",alignItems:"center"}]}>
+											<Switch
+												onValueChange={(value) => this.setState({isSwitchOn: value})}
+												style={{marginBottom:10,marginTop:10}}
+												value={this.state.isSwitchOn}
+												onTintColor="#4bd863"
+												thumbTintColor="#FFFFFF"
+												tintColor="#8e8e93" />
+										</View>
+									</View>
+								</View>)
+							}}
 						renderHiddenItem={ (data, rowMap) => (
 							<View style={styles.rowBack}>
-								<TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnLeft]} onPress={ _ => {} }>
+								<TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnLeft]} onPress={ _ => {this.props.navigation.navigate("AddClock",data.item)} }>
 									<Text style={styles.backTextWhite}>编辑</Text>
 								</TouchableOpacity>
-								<TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnRight]} onPress={ _ => {} }>
+								<TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnRight]} onPress={ _ => {this.delClockData(data.item)} }>
 									<Text style={styles.backTextWhite}>删除</Text>
 								</TouchableOpacity>
 							</View>
@@ -93,7 +85,6 @@ class ClockListView extends Component {
 						previewOpenDelay={3000}
 						onRowDidOpen={this.onRowDidOpen}
                         disableRightSwipe={true}
-						onSwipeValueChange={this.onSwipeValueChange}
 					/>
 				}
 
@@ -105,6 +96,10 @@ export default connect((state)=>{
 	return {
 		clockList:state['clockReducer']
 	}	
+},(dispatch)=>{
+	return {
+		delClockDataProp:(data)=>dispatch(del_clock(data))
+	}
 })(ClockListView);
 const styles = StyleSheet.create({
     fontColor:{

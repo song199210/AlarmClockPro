@@ -113,8 +113,9 @@ const Stacks = createStackNavigator({
     AddClock: {
         screen: AddClockView,
         navigationOptions:(props)=>{
-              return {
-                  headerTitle:(<Text style={{ flex: 1,color:"#ff8500",marginRight:45,fontSize:18,textAlign: 'center' }}>新增闹钟</Text>),
+            const state=props.navigation.state;
+            return {
+                  headerTitle:(<Text style={{ flex: 1,color:"#ff8500",marginRight:45,fontSize:18,textAlign: 'center' }}>{state.params == undefined?"新增闹钟":"编辑闹钟"}</Text>),
                   headerStyle:{
                       backgroundColor:"#111"
                       // borderBottomWidth:1,
@@ -152,7 +153,7 @@ const Stacks = createStackNavigator({
             }
         }
     },
-    SelectShock: { //选择铃声模式
+    SelectShock: { //选择震动模式
         screen: ShockListView,
         navigationOptions:(props)=>{
             return {
@@ -173,7 +174,7 @@ const Stacks = createStackNavigator({
             }
         }
     },
-    SelectRepeat: { //选择铃声模式
+    SelectRepeat: { //选择重复模式
         screen: RepeatListView,
         navigationOptions:(props)=>{
             return {

@@ -2,16 +2,12 @@ import React from "react";
 import {connect} from "react-redux";
 import {ring_action} from "../redux/action/index";
 import {View,Text,FlatList,Image,StyleSheet,Dimensions,TouchableOpacity,NativeModules} from "react-native";
-
+import {RingListData} from "../assets/data";
 class RingListView extends React.PureComponent {
     constructor(props){
         super(props);
         this.state={
-            dataList:[
-                {key:"0",text: '铃声1',selected:false},
-                {key:"1",text: '铃声2',selected:false},
-                {key:"2",text: '铃声3',selected:false}
-            ]
+            dataList:RingListData
         }
     }
     componentDidMount(){
@@ -30,7 +26,7 @@ class RingListView extends React.PureComponent {
             dataList:arr
         });
     }
-    setShockType=(item)=>{ //保存震动模式
+    setRingType=(item)=>{ //保存震动模式
         const key=item['key'];
         this.cRingState(key)
         NativeModules.RNUtilModules.setRingType(key);
@@ -38,7 +34,7 @@ class RingListView extends React.PureComponent {
     }
     _renderItem=({item})=>{
         return (
-                <TouchableOpacity style={styles.list_item} onPress={()=>this.setShockType(item)}>
+                <TouchableOpacity style={styles.list_item} onPress={()=>this.setRingType(item)}>
                     <Text style={[styles.basicFont,{flex:1}]}>{item.text}</Text>
                     {item['selected'] && (<Image style={styles.img_icon} source={require("../assets/images/yes_icon.png")}/>)}
                 </TouchableOpacity>
