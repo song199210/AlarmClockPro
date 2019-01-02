@@ -30,11 +30,13 @@ public class LoongggAlarmReceiver extends BroadcastReceiver {
         int flag = intent.getIntExtra("soundOrVibrator", 0);
         int type = intent.getIntExtra("vibratorType",0);
         int ring_t = intent.getIntExtra("ringType",0);
+        String timeStr=intent.getStringExtra("timeStr");
         Intent clockIntent = new Intent(context, ClockAlarmActivity.class);
         clockIntent.putExtra("msg", msg);
         clockIntent.putExtra("flag", flag);
         clockIntent.putExtra("type",type);
         clockIntent.putExtra("r_type",ring_t);
+        clockIntent.putExtra("timeStr",timeStr);
         clockIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(clockIntent);
     }

@@ -148,7 +148,7 @@ class AddClockView extends React.Component {
         const repeat_arr=this.props.RepeatType['key'].split(",");
         const shockType=this.props.ShockType['key'];
         const ringType=this.props.RingType['key'];
-        let clockMode=1;
+        let clockMode=1; //闹钟模式：铃声0，震动1，铃声+震动2
         if(shockType == "7"){
             clockMode=0;
         }else{
@@ -157,13 +157,19 @@ class AddClockView extends React.Component {
         var repeatList=repeat_arr.map((item)=>{
             return parseInt(item);
         });
-        NativeModules.RNUtilModules.setRNClock(timeStr,repeatList,clockMode,parseInt(shockType),parseInt(ringType));        
-        if(this.state.key == ''){
+        var keyStr="";
+        if(this.state.key == ''){//判断是否为空，新增闹钟，调用addclock的reducer
+            keyStr=(this.props.ClockList.length+1).toString();
+            clockObj['key']=keyStr;
             this.props.AddClock(clockObj);
-        }else{
+        }else{//编辑，调用updateclock的reducer
+            keyStr=this.state.key;
             clockObj['key']=this.state.key;
             this.props.UpdateClock(clockObj);
         }
+        console.log(typeof keyStr);
+        //调用AN方法
+        NativeModules.RNUtilModules.setRNClock(timeStr,repeatList,clockMode,parseInt(shockType),parseInt(ringType),keyStr); 
         this.props.navigation.navigate("Home");
     }
     render(){
@@ -184,16 +190,15 @@ class AddClockView extends React.Component {
                 </View>
                 <View style={styles.btnGroup}>
                     <View style={styles.btn}>
-                        <Button
-                        onPress={this.saveClockData}
-                        title="取消"
-                        color="red"
-                        />
+                        <TouchableOpacity
+                            onPress={()=>this.props.navigation.navigate("Home")}>
+                                <Text style={[styles.btnForm,{backgroundColor:"#ff0000"}]}>返回</Text>
+                        </TouchableOpacity>
                     </View>
                     <View style={styles.btn}>
                         <TouchableOpacity 
                         onPress={this.saveClockData}>
-                            <Text style={{color:"#fff"}}>保存</Text>
+                            <Text style={[styles.btnForm,{backgroundColor:"#ff8500"}]}>保存</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -205,7 +210,8 @@ export default connect((state)=>{
     return {
         RepeatType:state['cRepeatReducer'],
         ShockType:state['cShockReducer'],
-        RingType:state['cRingReducer']
+        RingType:state['cRingReducer'],
+        ClockList:state['clockReducer']
     }
 },(dispatch)=>{
     return {
@@ -250,6 +256,14 @@ const styles=StyleSheet.create({
         width:100,
         marginLeft:8,
         marginRight:8
+    },
+    btnForm:{
+        color:"#fff",
+        padding:4,
+        paddingTop:8,
+        paddingBottom:8,
+        borderRadius:2,
+        textAlign:"center"
     },
     right_icon:{
         width:20,

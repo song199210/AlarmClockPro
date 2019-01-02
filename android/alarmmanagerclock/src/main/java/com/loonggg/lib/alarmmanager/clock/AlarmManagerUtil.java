@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 
 import java.util.Calendar;
@@ -36,18 +37,30 @@ public class AlarmManagerUtil {
     }
 
     /**
+     * 取消闹钟
+     * @param idStr              闹钟的id
+     */
+    public static void cancleAlarm(Context context, String idStr) {
+        Intent intent=new Intent(ALARM_ACTION);
+        PendingIntent pi = PendingIntent.getBroadcast(context, Integer.parseInt(idStr), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        am.cancel(pi);
+        Toast.makeText(context,"闹钟删除成功",Toast.LENGTH_SHORT).show();
+    }
+    /**
+     * 设置闹钟
      * @param flag            周期性时间间隔的标志,flag = 0 表示一次性的闹钟, flag = 1 表示每天提醒的闹钟(1天的时间间隔),flag = 2
      *                        表示按周每周提醒的闹钟（一周的周期性时间间隔）
      * @param hour            时
      * @param minute          分
-     * @param id              闹钟的id
+     * @param idStr           闹钟的id
      * @param week            week=0表示一次性闹钟或者按天的周期性闹钟，非0 的情况下是几就代表以周为周期性的周几的闹钟
      * @param tips            闹钟提示信息
      * @param soundOrVibrator 2表示声音和震动都执行，1表示只有铃声提醒，0表示只有震动提醒
      * @param vibratorType    vibratorType震动模式
      * @param ringType        ringType铃声模式
      */
-    public static void setAlarm(Context context, int flag, int hour, int minute, int id, int
+    public static void setAlarm(Context context, int flag, int hour, int minute, String idStr, int
             week, String tips, int soundOrVibrator,int vibratorType,int ringType) {
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Calendar calendar = Calendar.getInstance();
@@ -64,12 +77,12 @@ public class AlarmManagerUtil {
         Intent intent = new Intent(ALARM_ACTION);
         intent.putExtra("intervalMillis", intervalMillis);//闹钟定时时间
         intent.putExtra("msg", tips);//闹钟提示信息
-        intent.putExtra("id", id);
+        intent.putExtra("id", idStr);
         intent.putExtra("soundOrVibrator", soundOrVibrator);//震动模式
         intent.putExtra("vibratorType",vibratorType); //震动模式
         intent.putExtra("ringType",ringType); //铃声模式
         //发送广播
-        PendingIntent sender = PendingIntent.getBroadcast(context, id, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent sender = PendingIntent.getBroadcast(context, Integer.parseInt(idStr), intent, PendingIntent.FLAG_CANCEL_CURRENT);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             am.setWindow(AlarmManager.RTC_WAKEUP, calMethod(week, calendar.getTimeInMillis()),
                     intervalMillis, sender);

@@ -7,7 +7,6 @@ export default function clockReducer(state=initState['clockList'],action){
     switch(action['type']){
         case ADD_CLOCK:
             Object.assign(obj,action['payload']);
-            obj['key']=new Date().getTime().toString();
             newArr.push(obj);
             return newArr;
         case UPDATE_CLOCK:
@@ -31,6 +30,6 @@ export default function clockReducer(state=initState['clockList'],action){
             }
             return newArr;
         default:
-            return state;
+            return newArr;
     }
 }

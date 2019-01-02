@@ -11,7 +11,8 @@ import {
 	Text,
 	TouchableOpacity,
 	TouchableHighlight,
-	View
+	View,
+	NativeModules
 } from 'react-native';
 import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view';
 import {del_clock} from "../redux/action/index";
@@ -29,6 +30,8 @@ class ClockListView extends Component {
 		// });
 	}
 	delClockData=(data)=>{//删除闹钟
+		console.log(data['key'])
+		NativeModules.RNUtilModules.cancleRNClock(data['key']);
 		this.props.delClockDataProp(data);
 	}
 	onRowDidOpen = (rowKey, rowMap) => {

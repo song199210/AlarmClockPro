@@ -119,27 +119,28 @@ public class ClockModule {
          * @param vibratorTyppe 震动模式
          * @param ringType 铃声模式
         * */
-        public static void setClock(Activity _that, String time, ReadableArray flaglist, int clockMode, int vibratorTyppe, int ringType) {
+        public static void setClock(Activity _that, String time, ReadableArray flaglist, int clockMode, int vibratorTyppe, int ringType,String idStr) {
+            String tips=time+"闹钟醒了";
             selectRemindCycle(flaglist); //初始化闹钟频率
             if (time != null && time.length() > 0) {
                 String[] times = time.split(":");
                 if (cycle == 0) {//是每天的闹钟
                     AlarmManagerUtil.setAlarm(_that, 0, Integer.parseInt(times[0]), Integer.parseInt
-                            (times[1]), 0, 0, "闹钟响了", clockMode, vibratorTyppe,ringType);
+                            (times[1]), idStr, 0, tips, clockMode, vibratorTyppe,ringType);
                 }
                 if (cycle == -1) {//是只响一次的闹钟
                     AlarmManagerUtil.setAlarm(_that, 1, Integer.parseInt(times[0]), Integer.parseInt
-                            (times[1]), 0, 0, "闹钟响了", clockMode, vibratorTyppe,ringType);
+                            (times[1]), idStr, 0, tips, clockMode, vibratorTyppe,ringType);
                 } else {//多选，周几的闹钟
                     String weeksStr = parseRepeat(cycle, 1);
                     String[] weeks = weeksStr.split(",");
                     for (int i = 0; i < weeks.length; i++) {
-                        Log.v("weeks的值", String.valueOf(weeks[i]));
+                        idStr=idStr+i;
                         AlarmManagerUtil.setAlarm(_that, 2, Integer.parseInt(times[0]), Integer
-                                .parseInt(times[1]), i, Integer.parseInt(weeks[i]), "闹钟响了", clockMode, vibratorTyppe,ringType);
+                                .parseInt(times[1]), idStr, Integer.parseInt(weeks[i]), tips, clockMode, vibratorTyppe,ringType);
                     }
                 }
-                Toast.makeText(_that, "闹钟设置成功", Toast.LENGTH_LONG).show();
+                Toast.makeText(_that, "闹钟设置成功", Toast.LENGTH_SHORT).show();
             }
 
         }

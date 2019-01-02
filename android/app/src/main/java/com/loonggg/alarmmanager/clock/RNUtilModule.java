@@ -6,6 +6,7 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
+import com.loonggg.lib.alarmmanager.clock.AlarmManagerUtil;
 
 import java.util.List;
 
@@ -26,12 +27,14 @@ public class RNUtilModule extends ReactContextBaseJavaModule {
     /**
      * @param flaglist 重复方式
      * @param clockMode 闹钟模式：1铃声;0震动;2铃声和震动
-     * @param vibratorType 震动模式
-     * @param ring 响铃方式
     */
     @ReactMethod
-    public void setRNClock(String time, ReadableArray flaglist, int clockMode, int vibratorTyppe, int ringType){
-        ClockModule.setClock(reactContext.getCurrentActivity(),time,flaglist,clockMode,vibratorTyppe,ringType);
+    public void setRNClock(String time, ReadableArray flaglist, int clockMode, int vibratorTyppe, int ringType,String idStr){
+        ClockModule.setClock(reactContext.getCurrentActivity(),time,flaglist,clockMode,vibratorTyppe,ringType,idStr);
+    }
+    @ReactMethod
+    public void cancleRNClock(String idStr){
+        AlarmManagerUtil.cancleAlarm(reactContext.getCurrentActivity(),idStr);
     }
     @ReactMethod
     public void setShockType(String typeStr){//设置震动模式
